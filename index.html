@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Falling Cargo — Evidence &amp; Equations Case #04</title>
+<style>
+:root{
+  --ink:#0d1117; --ink2:#131a24; --ink3:#1a2430;
+  --amb:#e8a33d; --amb-dim:#a8762c;
+  --chalk:#e9e7e2; --chalk-dim:#9aa3ad;
+  --ok:#5fb87a; --no:#d1604f;
+  --rule:#26313d;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--ink);color:var(--chalk);
+  font:16px/1.6 "Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  -webkit-font-smoothing:antialiased}
+.wrap{max-width:860px;margin:0 auto;padding:0 20px 90px}
+h1,h2,h3{font-family:"Helvetica Neue",Arial,sans-serif;font-weight:700;letter-spacing:-.01em;margin:0}
+p{margin:0 0 14px}
+button{font-family:"Helvetica Neue",Arial,sans-serif;cursor:pointer}
+:focus-visible{outline:2px solid var(--amb);outline-offset:3px}
+.hidden{display:none !important}
+
+.caseno{font:600 12px/1 "Helvetica Neue",Arial,sans-serif;letter-spacing:.22em;color:var(--amb-dim)}
+.btn{background:var(--amb);color:#17120a;border:0;border-radius:2px;
+  padding:13px 26px;font-size:15px;font-weight:700;letter-spacing:.03em}
+.btn:hover{background:#f4b356}
+.btn.ghost{background:transparent;color:var(--chalk-dim);border:1px solid var(--rule)}
+.btn.ghost:hover{color:var(--chalk);border-color:var(--chalk-dim)}
+.btn:disabled{opacity:.35;cursor:not-allowed}
+
+/* ---------- title ---------- */
+#title{
+  min-height:100vh;display:flex;align-items:center;justify-content:center;
+  text-align:center;padding:40px 20px;position:relative;overflow:hidden;
+  background:#03070b;
+}
+#titleScene{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+#titleScene svg{position:absolute;inset:0;width:100%;height:100%;filter:contrast(1.035) saturate(.92)}
+#titleScene::after{
+  content:"";position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse at 57% 48%,transparent 0 28%,rgba(0,0,0,.12) 57%,rgba(0,0,0,.58) 100%),
+    linear-gradient(180deg,rgba(4,8,12,.74),rgba(4,8,12,.18) 44%,rgba(4,8,12,.12) 68%,rgba(4,8,12,.66));
+}
+#title .inner{position:relative;z-index:2;max-width:700px;padding:22px 26px}
+#title .caseno{text-shadow:0 2px 14px #000}
+#title h1{
+  font-size:clamp(48px,11vw,108px);line-height:.91;color:#f0efeb;
+  letter-spacing:-.035em;text-shadow:0 5px 26px rgba(0,0,0,.72);
+}
+#title .sub{
+  margin-top:18px;font:400 15px/1.7 "Helvetica Neue",Arial,sans-serif;
+  color:#b6bec7;text-shadow:0 2px 10px #000;
+}
+#title .rule{width:58px;height:2px;background:var(--amb);margin:25px auto;box-shadow:0 0 15px rgba(232,163,61,.35)}
+.entry{margin-top:32px}
+.entry label{display:block;font:600 12px/1 "Helvetica Neue",Arial,sans-serif;
+  letter-spacing:.16em;color:var(--chalk-dim);margin-bottom:10px}
+.entry input{
+  width:100%;max-width:340px;background:rgba(10,16,23,.86);
+  border:1px solid #34414d;color:var(--chalk);border-radius:4px;padding:13px 15px;font-size:17px;
+  font-family:"Helvetica Neue",Arial,sans-serif;text-align:center;letter-spacing:.08em;
+  box-shadow:0 12px 32px rgba(0,0,0,.22);
+}
+.entry input:focus{border-color:var(--amb);outline:none}
+.entry .btn{margin-top:16px}
+.entry .note{margin-top:14px;font:400 12.5px/1.6 "Helvetica Neue",Arial,sans-serif;color:#6d7681}
+
+/* premium homepage scene */
+.hp-world{transform-origin:58% 50%;animation:hpCam 34s ease-in-out infinite alternate}
+@keyframes hpCam{from{transform:scale(1.01)}to{transform:scale(1.055) translate(-1.0%,.35%)}}
+.hp-trolley{animation:hpTrolley 6.2s linear 1s forwards}
+@keyframes hpTrolley{to{transform:translateX(128px)}}
+.hp-cargo{transform-box:fill-box;transform-origin:center;animation:hpCargo 5.0s cubic-bezier(.48,0,.86,.58) 1.7s forwards}
+@keyframes hpCargo{
+  0%{transform:translate(0,0) rotate(0deg);opacity:0}
+  5%{opacity:1}
+  28%{transform:translate(28px,27px) rotate(.3deg)}
+  58%{transform:translate(72px,122px) rotate(.9deg)}
+  82%{transform:translate(108px,248px) rotate(1.5deg)}
+  100%{transform:translate(128px,306px) rotate(1.9deg)}
+}
+.hp-dust{transform-box:fill-box;transform-origin:center;animation:hpDust 3.2s ease-out 6.55s forwards}
+@keyframes hpDust{0%{opacity:0;transform:scale(.25)}18%{opacity:.58}100%{opacity:0;transform:scale(1.6)}}
+.hp-lamp{animation:hpLamp 7s ease-in-out infinite}
+@keyframes hpLamp{0%,100%{opacity:1}48%{opacity:.9}52%{opacity:1}}
+.hp-beacon{animation:hpBeacon .9s ease-in-out infinite}
+@keyframes hpBeacon{0%,100%{opacity:.25}50%{opacity:1}}
+.hp-haze{animation:hpHaze 18s ease-in-out infinite alternate}
+@keyframes hpHaze{from{transform:translateX(-30px)}to{transform:translateX(40px)}}
+
+/* ---------- cinematic ---------- */
+#cine{position:fixed;inset:0;background:#02060a;z-index:60;display:flex;align-items:center;justify-content:center;overflow:hidden}
+#cine svg{width:100%;height:100%;max-width:none;filter:contrast(1.06) saturate(.92)}
+#cineSkip{position:absolute;right:20px;bottom:20px;z-index:9}
+#cineCap{position:absolute;left:0;right:0;bottom:68px;text-align:center;z-index:8;
+  font:600 11px/1 "Helvetica Neue",Arial,sans-serif;letter-spacing:.25em;color:var(--amb);opacity:0;text-shadow:0 2px 18px #000}
+#cineMeta{position:absolute;left:24px;top:22px;z-index:8;font:500 10px/1.55 "SFMono-Regular",Consolas,monospace;letter-spacing:.15em;color:#7d8994;opacity:0;transition:opacity .35s;text-shadow:0 1px 8px #000}
+#cineMeta.on{opacity:1} #cineMeta b{color:#dce1e5;font-weight:600}
+#cineVig{position:absolute;inset:0;z-index:6;pointer-events:none;background:radial-gradient(ellipse at 58% 46%,transparent 0 31%,rgba(0,0,0,.10) 58%,rgba(0,0,0,.58) 100%),linear-gradient(180deg,rgba(0,0,0,.15),transparent 32%,transparent 70%,rgba(0,0,0,.24))}
+#cineBarT,#cineBarB{position:absolute;left:0;right:0;height:4.5vh;background:#000;z-index:7;pointer-events:none}#cineBarT{top:0}#cineBarB{bottom:0}
+
+/* ---------- case body ---------- */
+.masthead{border-bottom:1px solid var(--rule);padding:26px 0 18px;margin-bottom:30px;
+  display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap}
+.masthead h2{font-size:23px}
+.masthead .team{font:600 12px/1 "Helvetica Neue",Arial,sans-serif;letter-spacing:.16em;color:var(--amb)}
+.brief{background:var(--ink2);border-left:2px solid var(--amb);padding:20px 22px;margin-bottom:34px}
+.brief p:last-child{margin-bottom:0}
+h3.sec{font-size:13px;letter-spacing:.18em;color:var(--chalk-dim);margin:38px 0 16px;font-weight:600}
+
+.eviGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.evi{background:var(--ink2);border:1px solid var(--rule);border-radius:3px;padding:16px 18px}
+.evi h4{margin:0 0 12px;font:700 13px/1.3 "Helvetica Neue",Arial,sans-serif;letter-spacing:.05em;color:var(--amb)}
+.evi .row{display:flex;justify-content:space-between;gap:12px;padding:5px 0;border-bottom:1px dotted #202b36}
+.evi .row:last-child{border-bottom:0}
+.evi dt{color:var(--chalk-dim)}
+.evi dd{margin:0;font-variant-numeric:tabular-nums;font-weight:600}
+.evi dl{margin:0;font-family:"Helvetica Neue",Arial,sans-serif;font-size:14px}
+
+.stage{border:1px solid var(--rule);border-radius:3px;margin-bottom:12px;background:var(--ink2);overflow:hidden}
+.stage.locked{opacity:.42}
+.stage.done{border-color:#2f4a38}
+.stHead{display:flex;align-items:center;gap:14px;padding:16px 18px}
+.stNum{flex:none;width:26px;height:26px;border-radius:50%;border:1px solid var(--rule);
+  display:grid;place-items:center;font:700 12px/1 "Helvetica Neue",Arial,sans-serif;color:var(--chalk-dim)}
+.stage.done .stNum{background:var(--ok);border-color:var(--ok);color:#0c1a11}
+.stage.open .stNum{border-color:var(--amb);color:var(--amb)}
+.stTitle{font:700 15px/1.35 "Helvetica Neue",Arial,sans-serif}
+.stBody{padding:0 18px 18px}
+.stBody .ask{font-size:15px;margin-bottom:14px}
+.eq{display:inline-block;background:var(--ink3);border:1px solid var(--rule);border-radius:2px;
+  padding:7px 12px;margin-bottom:14px;font:15px/1 "SFMono-Regular",Consolas,monospace;color:var(--amb)}
+.ansRow{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.ansRow input{width:190px;background:var(--ink3);border:1px solid var(--rule);color:var(--chalk);
+  border-radius:2px;padding:11px 13px;font:16px/1 "Helvetica Neue",Arial,sans-serif;font-variant-numeric:tabular-nums}
+.ansRow input:focus{border-color:var(--amb);outline:none}
+.unit{color:var(--chalk-dim);font:14px/1 "Helvetica Neue",Arial,sans-serif}
+.fb{margin-top:12px;font:14px/1.55 "Helvetica Neue",Arial,sans-serif;display:none}
+.fb.show{display:block}
+.fb.good{color:var(--ok)}
+.fb.bad{color:var(--no)}
+.tries{margin-top:8px;font:12px/1 "Helvetica Neue",Arial,sans-serif;color:#6d7681}
+
+.sealed{border:1px dashed var(--amb-dim);background:rgba(232,163,61,.05);border-radius:3px;padding:18px;margin:16px 0}
+.sealed h4{margin:0 0 8px;font:700 13px/1.3 "Helvetica Neue",Arial,sans-serif;letter-spacing:.05em;color:var(--amb)}
+.sealed .val{font:700 26px/1.2 "Helvetica Neue",Arial,sans-serif;font-variant-numeric:tabular-nums;color:var(--chalk)}
+.sealed p{font:13.5px/1.6 "Helvetica Neue",Arial,sans-serif;color:var(--chalk-dim);margin:8px 0 0}
+
+.choices{display:flex;flex-direction:column;gap:9px;margin-top:6px}
+.choice{text-align:left;background:var(--ink3);border:1px solid var(--rule);color:var(--chalk);
+  border-radius:2px;padding:13px 15px;font:14.5px/1.5 "Helvetica Neue",Arial,sans-serif}
+.choice:hover{border-color:var(--chalk-dim)}
+
+.vpair{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:6px}
+@media(max-width:560px){.vpair{grid-template-columns:1fr}}
+.vcard{background:var(--ink3);border:1px solid var(--rule);border-radius:3px;padding:20px;
+  text-align:left;color:var(--chalk);font-family:"Helvetica Neue",Arial,sans-serif}
+.vcard:hover{border-color:var(--chalk-dim)}
+.vcard.sel{border-color:var(--amb);background:rgba(232,163,61,.08)}
+.vcard b{display:block;font-size:15px;margin-bottom:6px}
+.vcard span{font-size:13.5px;line-height:1.55;color:var(--chalk-dim)}
+
+#replayBox{background:#04080c;border:1px solid var(--rule);border-radius:3px;overflow:hidden;margin-top:8px}
+#replayBox svg{display:block;width:100%;height:auto}
+.rcap{padding:14px 18px;border-top:1px solid var(--rule);font:14px/1.6 "Helvetica Neue",Arial,sans-serif;color:var(--chalk-dim)}
+
+.cer label{display:block;font:700 13.5px/1.4 "Helvetica Neue",Arial,sans-serif;margin:18px 0 7px}
+.cer .hint{font:13px/1.55 "Helvetica Neue",Arial,sans-serif;color:#6d7681;margin-bottom:9px}
+.cer textarea,.xexam textarea{width:100%;background:var(--ink3);border:1px solid var(--rule);
+  color:var(--chalk);border-radius:2px;padding:13px;font:15px/1.65 inherit;resize:vertical}
+.cer textarea{min-height:110px}
+.xexam textarea{min-height:86px}
+.cer textarea:focus,.xexam textarea:focus{border-color:var(--amb);outline:none}
+.xexam{background:var(--ink2);border-left:2px solid var(--no);padding:18px 20px;margin:26px 0 6px}
+.xexam h4{margin:0 0 10px;font:700 13px/1.3 "Helvetica Neue",Arial,sans-serif;letter-spacing:.05em;color:var(--no)}
+.xexam p{font:14.5px/1.65 "Helvetica Neue",Arial,sans-serif;color:var(--chalk);margin:0 0 10px}
+.footer{margin-top:52px;padding-top:20px;border-top:1px solid var(--rule);
+  font:12.5px/1.7 "Helvetica Neue",Arial,sans-serif;color:#6d7681}
+
+#printReport{display:none}
+@media print{
+  @page{margin:16mm}
+  body{background:#fff !important;color:#111 !important;font:11.5pt/1.5 Georgia,serif}
+  #title,#cine,#case,.btn{display:none !important}
+  #printReport{display:block !important}
+  #printReport h1{font:700 20pt/1.2 "Helvetica Neue",Arial,sans-serif;margin:0 0 2mm}
+  #printReport .pcase{font:700 8.5pt/1 "Helvetica Neue",Arial,sans-serif;letter-spacing:.2em;color:#7a5410}
+  #printReport .pmeta{font:9.5pt/1.5 "Helvetica Neue",Arial,sans-serif;color:#555;margin:0 0 5mm;
+    padding-bottom:3mm;border-bottom:1px solid #bbb}
+  #printReport h2{font:700 11pt/1.3 "Helvetica Neue",Arial,sans-serif;margin:6mm 0 2mm;
+    color:#7a5410;letter-spacing:.06em;page-break-after:avoid}
+  #printReport table{width:100%;border-collapse:collapse;margin-bottom:3mm;
+    font:9.5pt/1.4 "Helvetica Neue",Arial,sans-serif}
+  #printReport th{text-align:left;background:#f2f4f6;color:#555;font-weight:700;
+    padding:1.6mm 2mm;border:1px solid #ccc}
+  #printReport td{padding:1.6mm 2mm;border:1px solid #ccc;vertical-align:top}
+  #printReport td.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+  #printReport .ans{font-weight:700}
+  #printReport .vd{display:inline-block;border:1.5px solid #111;padding:1.5mm 4mm;
+    font:700 11pt/1 "Helvetica Neue",Arial,sans-serif;letter-spacing:.08em}
+  #printReport .qa{margin-bottom:4mm;page-break-inside:avoid}
+  #printReport .q{font:italic 9.5pt/1.45 Georgia,serif;color:#555;margin:0 0 1.5mm}
+  #printReport .a{white-space:pre-wrap;border:1px solid #ccc;padding:2.5mm;min-height:14mm}
+  #printReport .foot{margin-top:6mm;padding-top:2mm;border-top:1px solid #bbb;
+    font:8.5pt/1.4 "Helvetica Neue",Arial,sans-serif;color:#666}
+}
+@media(prefers-reduced-motion:reduce){
+  *{animation-duration:.001s !important;animation-iteration-count:1 !important;transition-duration:.001s !important}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ TITLE ============ -->
+<section id="title">
+  <div id="titleScene" aria-hidden="true">
+    <svg viewBox="0 0 1200 700" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="hpSky" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#02070c"/>
+          <stop offset="58%" stop-color="#09131d"/>
+          <stop offset="100%" stop-color="#172735"/>
+        </linearGradient>
+        <linearGradient id="hpDeck" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#263543"/>
+          <stop offset="15%" stop-color="#17232d"/>
+          <stop offset="100%" stop-color="#050a0f"/>
+        </linearGradient>
+        <linearGradient id="hpBox" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#432617"/>
+          <stop offset="14%" stop-color="#774727"/>
+          <stop offset="48%" stop-color="#aa6a39"/>
+          <stop offset="67%" stop-color="#89512d"/>
+          <stop offset="100%" stop-color="#311a10"/>
+        </linearGradient>
+        <linearGradient id="hpTop" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#c48751"/>
+          <stop offset="100%" stop-color="#694025"/>
+        </linearGradient>
+        <radialGradient id="hpLamp" cx=".5" cy=".5" r=".5">
+          <stop offset="0%" stop-color="#ffe1a8" stop-opacity=".70"/>
+          <stop offset="19%" stop-color="#e8a33d" stop-opacity=".27"/>
+          <stop offset="100%" stop-color="#e8a33d" stop-opacity="0"/>
+        </radialGradient>
+        <linearGradient id="hpCone" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#ffe2a4" stop-opacity=".17"/>
+          <stop offset="100%" stop-color="#e8a33d" stop-opacity="0"/>
+        </linearGradient>
+        <radialGradient id="hpRed" cx=".5" cy=".5" r=".5">
+          <stop offset="0%" stop-color="#ff674f" stop-opacity=".9"/>
+          <stop offset="100%" stop-color="#ff674f" stop-opacity="0"/>
+        </radialGradient>
+        <radialGradient id="hpDust" cx=".5" cy=".5" r=".5">
+          <stop offset="0%" stop-color="#a8b6bf" stop-opacity=".34"/>
+          <stop offset="100%" stop-color="#788892" stop-opacity="0"/>
+        </radialGradient>
+        <filter id="hpBlur"><feGaussianBlur stdDeviation="8"/></filter>
+      </defs>
+
+      <g class="hp-world">
+        <rect x="-70" y="-50" width="1340" height="800" fill="url(#hpSky)"/>
+
+        <!-- distant stacked containers -->
+        <g opacity=".78">
+          <rect x="-20" y="425" width="150" height="31" fill="#11191f"/>
+          <rect x="-20" y="392" width="150" height="31" fill="#0d171d"/>
+          <rect x="142" y="425" width="130" height="31" fill="#0a151b"/>
+          <rect x="970" y="425" width="174" height="31" fill="#0a1319"/>
+          <rect x="1010" y="392" width="134" height="31" fill="#12191e"/>
+          <rect x="1080" y="359" width="64" height="31" fill="#0c151a"/>
+        </g>
+
+        <!-- distant lights/reflections -->
+        <g fill="#d99a3e">
+          <circle cx="78" cy="373" r="2.1"/><circle cx="232" cy="407" r="2"/>
+          <circle cx="990" cy="375" r="2.2"/><circle cx="1110" cy="346" r="2"/>
+        </g>
+        <g opacity=".15" filter="url(#hpBlur)">
+          <ellipse cx="78" cy="444" rx="13" ry="44" fill="#e8a33d"/>
+          <ellipse cx="990" cy="444" rx="13" ry="46" fill="#e8a33d"/>
+        </g>
+
+        <!-- gantry crane -->
+        <g stroke="#273641" fill="none" stroke-linecap="square">
+          <path d="M255 500 L255 115 M312 500 L312 115" stroke-width="12"/>
+          <path d="M878 500 L878 115 M935 500 L935 115" stroke-width="12"/>
+          <path d="M220 115 H970 M220 147 H970" stroke-width="12"/>
+        </g>
+        <g stroke="#18252f" stroke-width="3.6" fill="none">
+          <path d="M255 184 L312 236 M312 184 L255 236 M255 288 L312 340 M312 288 L255 340 M255 392 L312 444 M312 392 L255 444"/>
+          <path d="M878 184 L935 236 M935 184 L878 236 M878 288 L935 340 M935 288 L878 340 M878 392 L935 444 M935 392 L878 444"/>
+          <path d="M360 115 L414 147 M468 115 L522 147 M576 115 L630 147 M684 115 L738 147 M792 115 L846 147"/>
+        </g>
+        <rect x="220" y="143" width="750" height="5" fill="#536b7b" opacity=".55"/>
+
+        <!-- floodlights -->
+        <g stroke="#17242e" stroke-width="6">
+          <line x1="120" y1="500" x2="120" y2="232"/>
+          <line x1="1070" y1="500" x2="1070" y2="215"/>
+        </g>
+        <circle cx="120" cy="229" r="108" fill="url(#hpLamp)" class="hp-lamp"/>
+        <circle cx="1070" cy="212" r="116" fill="url(#hpLamp)" class="hp-lamp"/>
+        <path d="M120 232 L35 500 H205 Z" fill="url(#hpCone)" opacity=".74"/>
+        <path d="M1070 215 L980 500 H1160 Z" fill="url(#hpCone)" opacity=".70"/>
+
+        <!-- trolley -->
+        <g class="hp-trolley">
+          <rect x="455" y="118" width="94" height="29" rx="3" fill="#354a59"/>
+          <rect x="473" y="147" width="58" height="11" fill="#24333e"/>
+          <circle cx="477" cy="115" r="8" fill="#131e25"/>
+          <circle cx="527" cy="115" r="8" fill="#131e25"/>
+          <circle cx="502" cy="107" r="35" fill="url(#hpRed)" class="hp-beacon"/>
+          <circle cx="502" cy="107" r="3.5" fill="#ff624b"/>
+          <line x1="502" y1="158" x2="502" y2="198" stroke="#4d6575" stroke-width="3"/>
+          <rect x="459" y="196" width="86" height="14" rx="2" fill="#3b5365"/>
+        </g>
+
+        <!-- falling cargo -->
+        <g class="hp-cargo">
+          <polygon points="447,222 547,222 560,231 460,231" fill="url(#hpTop)"/>
+          <rect x="447" y="231" width="113" height="60" rx="1.5" fill="url(#hpBox)" stroke="#bd824a" stroke-width="1.4"/>
+          <g stroke="#62371f" stroke-width="1.4" opacity=".78">
+            <line x1="468" y1="231" x2="468" y2="291"/>
+            <line x1="491" y1="231" x2="491" y2="291"/>
+            <line x1="514" y1="231" x2="514" y2="291"/>
+            <line x1="537" y1="231" x2="537" y2="291"/>
+          </g>
+        </g>
+
+        <!-- deck -->
+        <rect x="-70" y="500" width="1340" height="250" fill="url(#hpDeck)"/>
+        <g stroke="#33404a" stroke-width="1.2" opacity=".48">
+          <line x1="-70" y1="538" x2="1270" y2="538"/>
+          <line x1="-70" y1="596" x2="1270" y2="596"/>
+          <line x1="-70" y1="665" x2="1270" y2="665"/>
+        </g>
+        <line x1="-70" y1="565" x2="1270" y2="565" stroke="#e8a33d" stroke-width="2" stroke-dasharray="20 17" opacity=".17"/>
+
+        <!-- future impact hint -->
+        <ellipse cx="690" cy="506" rx="145" ry="28" fill="url(#hpDust)" class="hp-dust" opacity="0"/>
+
+        <!-- atmospheric haze -->
+        <g opacity=".09" filter="url(#hpBlur)" class="hp-haze">
+          <ellipse cx="350" cy="490" rx="360" ry="34" fill="#9bb0bc"/>
+          <ellipse cx="990" cy="465" rx="310" ry="30" fill="#9bb0bc"/>
+        </g>
+      </g>
+    </svg>
+  </div>
+  <div class="inner">
+    <div class="caseno">EVIDENCE &amp; EQUATIONS &nbsp;·&nbsp; CASE #04</div>
+    <div class="rule"></div>
+    <h1>THE FALLING<br>CARGO</h1>
+    <div class="sub">Projectile motion · Free fall · Independence of motion</div>
+    <p class="sub" style="margin-top:22px">The container did not land where it was released.<br>How fast was the trolley moving?</p>
+    <div class="entry">
+      <label for="teamIn">INVESTIGATION TEAM NAME</label>
+      <input id="teamIn" type="text" autocomplete="off" spellcheck="false" placeholder="e.g. SPREADER">
+      <br><button class="btn" id="startBtn">Take the case</button>
+      <p class="note">Your team name determines your evidence. Every team gets a different crane.<br>No logins. No student data collected.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CINEMATIC ============ -->
+<div id="cine" class="hidden" aria-hidden="true">
+  <svg viewBox="0 0 980 620" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="cSky" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#03080e"/><stop offset="62%" stop-color="#0a1420"/>
+        <stop offset="100%" stop-color="#1b2c3a"/>
+      </linearGradient>
+      <linearGradient id="cDeck" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#1d2a38"/><stop offset="100%" stop-color="#060c12"/>
+      </linearGradient>
+      <linearGradient id="cBox" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stop-color="#5c3a24"/><stop offset="42%" stop-color="#9a6337"/>
+        <stop offset="58%" stop-color="#ad7241"/><stop offset="100%" stop-color="#3c2417"/>
+      </linearGradient>
+      <radialGradient id="cGlow" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#ffd79a" stop-opacity=".52"/>
+        <stop offset="28%" stop-color="#e8a33d" stop-opacity=".18"/>
+        <stop offset="100%" stop-color="#e8a33d" stop-opacity="0"/>
+      </radialGradient>
+      <linearGradient id="cCone" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#ffd79a" stop-opacity=".16"/>
+        <stop offset="100%" stop-color="#e8a33d" stop-opacity="0"/>
+      </linearGradient>
+      <radialGradient id="cDustG" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#b9c8d4" stop-opacity=".5"/>
+        <stop offset="100%" stop-color="#8fa3b3" stop-opacity="0"/>
+      </radialGradient>
+      <radialGradient id="cBeacon" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#ff8a5c" stop-opacity=".85"/>
+        <stop offset="100%" stop-color="#ff8a5c" stop-opacity="0"/>
+      </radialGradient>
+      <radialGradient id="cVig" cx="50%" cy="48%" r="72%">
+        <stop offset="42%" stop-color="#000" stop-opacity="0"/>
+        <stop offset="100%" stop-color="#000" stop-opacity=".72"/>
+      </radialGradient>
+    </defs>
+
+    <g class="k-cam"><g class="k-shake">
+      <rect x="-40" y="-40" width="1060" height="700" fill="url(#cSky)"/>
+
+      <!-- distant yard -->
+      <g fill="#070f16" opacity=".9">
+        <rect x="-40" y="404" width="120" height="24"/><rect x="-40" y="380" width="120" height="24"/>
+        <rect x="86" y="404" width="104" height="24"/>
+        <rect x="820" y="404" width="130" height="24"/><rect x="820" y="380" width="130" height="24"/>
+        <rect x="884" y="356" width="66" height="24"/>
+      </g>
+      <g stroke="#0b141d" stroke-width="4" fill="none">
+        <path d="M40 430 L40 336 L150 336 L150 430 M40 360 L150 360"/>
+        <path d="M842 430 L842 320 L946 320 L946 430 M842 346 L946 346"/>
+      </g>
+
+      <!-- floodlight masts -->
+      <g stroke="#16222d" stroke-width="5" fill="none">
+        <path d="M96 466 L96 212"/><path d="M886 466 L886 198"/>
+      </g>
+      <circle cx="96" cy="210" r="86" fill="url(#cGlow)" class="k-lamp"/>
+      <circle cx="886" cy="196" r="94" fill="url(#cGlow)" class="k-lamp"/>
+      <path d="M96 212 L28 468 L172 468 Z" fill="url(#cCone)" class="k-lamp"/>
+      <path d="M886 198 L812 468 L964 468 Z" fill="url(#cCone)" class="k-lamp"/>
+
+      <!-- gantry -->
+      <g stroke="#25333f" stroke-width="9" fill="none" stroke-linecap="square">
+        <path d="M210 470 L210 118 M258 470 L258 118"/>
+        <path d="M700 470 L700 118 M748 470 L748 118"/>
+        <path d="M182 118 L778 118 M182 146 L778 146"/>
+      </g>
+      <g stroke="#1a2732" stroke-width="3.2" fill="none">
+        <path d="M210 176 L258 220 M258 176 L210 220 M210 268 L258 312 M258 268 L210 312
+                 M210 360 L258 404 M258 360 L210 404
+                 M700 176 L748 220 M748 176 L700 220 M700 268 L748 312 M748 268 L700 312
+                 M700 360 L748 404 M748 360 L700 404"/>
+        <path d="M300 118 L344 144 M392 118 L436 144 M484 118 L528 144 M576 118 L620 144 M668 118 L712 144"/>
+      </g>
+      <rect x="182" y="142" width="596" height="4" fill="#4a6274" opacity=".55"/>
+
+      <!-- trolley: uniform horizontal motion, all the way through -->
+      <g class="k-trolleyX">
+        <rect x="352" y="120" width="80" height="26" rx="3" fill="#2f4150"/>
+        <rect x="368" y="146" width="48" height="10" fill="#25333f"/>
+        <circle cx="392" cy="114" r="14" fill="url(#cBeacon)" class="k-beacon"/>
+        <circle cx="392" cy="114" r="3.4" fill="#ff8a5c" class="k-beacon"/>
+        <line x1="392" y1="156" x2="392" y2="184" stroke="#3b5162" stroke-width="3"/>
+        <g class="k-spreader">
+          <rect x="356" y="184" width="72" height="12" rx="2" fill="#33475a"/>
+          <rect x="360" y="196" width="8" height="7" fill="#3f596d" class="k-lockL"/>
+          <rect x="416" y="196" width="8" height="7" fill="#3f596d" class="k-lockR"/>
+        </g>
+      </g>
+
+      <!-- container: outer group moves horizontally at constant rate,
+           inner group falls on quadratic keyframes. The curve is produced
+           by the two independent motions, not drawn as a path. -->
+      <g class="k-boxX">
+        <g class="k-boxY">
+          <rect x="346" y="202" width="92" height="46" rx="2" fill="url(#cBox)"
+                stroke="#c08a4e" stroke-width="1.4"/>
+          <g stroke="#6d4326" stroke-width="1.2" opacity=".7">
+            <line x1="364" y1="202" x2="364" y2="248"/><line x1="384" y1="202" x2="384" y2="248"/>
+            <line x1="404" y1="202" x2="404" y2="248"/><line x1="424" y1="202" x2="424" y2="248"/>
+          </g>
+        </g>
+      </g>
+
+      <!-- deck -->
+      <rect x="-40" y="466" width="1060" height="194" fill="url(#cDeck)"/>
+      <g stroke="#26313d" stroke-width="1.4" opacity=".45">
+        <line x1="-40" y1="500" x2="1020" y2="500"/><line x1="-40" y1="552" x2="1020" y2="552"/>
+        <line x1="-40" y1="620" x2="1020" y2="620"/>
+      </g>
+      <g stroke="#e8a33d" stroke-width="2" opacity=".16" stroke-dasharray="16 14">
+        <line x1="-40" y1="526" x2="1020" y2="526"/>
+      </g>
+
+      <!-- impact -->
+      <ellipse cx="574" cy="474" rx="150" ry="34" fill="url(#cDustG)" class="k-burst" opacity="0"/>
+      <g class="k-dust" opacity="0">
+        <ellipse cx="574" cy="474" rx="86" ry="15" fill="none" stroke="#b9c8d4" stroke-width="2.4"/>
+        <ellipse cx="574" cy="474" rx="152" ry="26" fill="none" stroke="#71879a" stroke-width="1.7"/>
+        <ellipse cx="574" cy="474" rx="228" ry="38" fill="none" stroke="#465a6d" stroke-width="1.2"/>
+      </g>
+      <rect x="-40" y="-40" width="1060" height="700" fill="#ffe6bd" class="k-flash" opacity="0"/>
+    </g></g>
+
+    <rect x="0" y="0" width="980" height="620" fill="url(#cVig)"/>
+
+    <!-- encoder readout -->
+    <g class="k-hud" opacity="0">
+      <rect x="58" y="500" width="292" height="88" rx="3" fill="#050b12" stroke="#26313d"/>
+      <text x="78" y="528" fill="#6d7681" font-family="Helvetica Neue,Arial" font-size="11"
+            letter-spacing="2.4">TROLLEY ENCODER · m ALONG RAIL</text>
+      <text id="encVal" x="78" y="566" fill="#e8a33d" font-family="Helvetica Neue,Arial"
+            font-size="30" font-weight="700">0.00</text>
+      <text id="encTag" x="330" y="566" fill="#d1604f" text-anchor="end"
+            font-family="Helvetica Neue,Arial" font-size="12" font-weight="700"
+            letter-spacing="2" opacity="0">CLAMP-OPEN</text>
+    </g>
+  </svg>
+  <div id="cineMeta" aria-hidden="true">02:14:08 &nbsp;·&nbsp; BAY 7<br><b>GANTRY INCIDENT CAMERA</b></div>
+  <div id="cineCap">CASE EVIDENCE RECORDED</div>
+  <div id="cineVig"></div><div id="cineBarT"></div><div id="cineBarB"></div>
+  <button class="btn ghost" id="cineSkip">Skip</button>
+</div>
+
+<!-- ============ CASE ============ -->
+<div id="printReport" aria-hidden="true"></div>
+<main id="case" class="wrap hidden">
+  <div class="masthead">
+    <div><div class="caseno">CASE #04</div><h2>The Falling Cargo</h2></div>
+    <div class="team" id="teamTag"></div>
+  </div>
+
+  <div class="brief">
+    <p>At 02:14 a loaded container came off the spreader of a yard gantry crane and fell to the deck. The yard was clear. Nobody was hurt, and the container was destroyed.</p>
+    <p>The crane operator's union says the clamp failed and the equipment was at fault. The terminal operator says the trolley was being run above the posted speed and the load was swinging.</p>
+    <p>The trolley carries a position encoder that logs where it was at the instant the clamp released. The impact centre has been surveyed along the same rail axis. Those two numbers are the case.</p>
+    <p style="margin-bottom:0"><strong>Nobody disputes the container fell.</strong> The question is how fast it was travelling sideways when it let go — because a container released from a stationary trolley lands directly beneath the release point.</p>
+  </div>
+
+  <h3 class="sec">EVIDENCE ON THE BENCH</h3>
+  <div class="eviGrid" id="eviGrid"></div>
+
+  <h3 class="sec">INVESTIGATION</h3>
+  <div id="stages"></div>
+
+  <div id="verdictWrap" class="hidden">
+    <h3 class="sec">VERDICT</h3>
+    <div class="stage open">
+      <div class="stHead"><div class="stNum">V</div><div class="stTitle">What does the evidence support?</div></div>
+      <div class="stBody">
+        <p class="ask" id="verdictAsk"></p>
+        <div class="vpair">
+          <button class="vcard" data-v="OVER LIMIT">
+            <b>Over the limit</b>
+            <span>The reconstructed trolley speed exceeds the posted maximum. The crane was being run too fast for the yard rules.</span>
+          </button>
+          <button class="vcard" data-v="WITHIN LIMIT">
+            <b>Within the limit</b>
+            <span>The reconstructed trolley speed is below the posted maximum. Excess trolley speed is not supported as the cause of the incident.</span>
+          </button>
+        </div>
+        <div class="fb" id="verdictFb"></div>
+        <div style="margin-top:16px"><button class="btn" id="verdictBtn" disabled>File the verdict</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="replayWrap" class="hidden">
+    <h3 class="sec">RECONSTRUCTION</h3>
+    <p style="font:14.5px/1.7 'Helvetica Neue',Arial,sans-serif;color:var(--chalk-dim)">Built from your numbers. The dotted line is where the container would have landed had the trolley been standing still.</p>
+    <div id="replayBox"></div>
+    <div style="margin-top:14px"><button class="btn ghost" id="replayAgain">Play again</button></div>
+  </div>
+
+  <div id="cerWrap" class="hidden">
+    <h3 class="sec">WRITTEN JUSTIFICATION</h3>
+    <div class="stage open"><div class="stBody" style="padding-top:18px">
+      <div class="cer">
+        <label for="cClaim">Claim</label>
+        <p class="hint">State how fast the trolley was moving when the clamp released, and whether that broke the posted limit. One sentence.</p>
+        <textarea id="cClaim"></textarea>
+        <label for="cEvid">Evidence</label>
+        <p class="hint">Quote your own numbers with units — the fall time, the horizontal throw, the reconstructed speed, and the posted limit you compared it against.</p>
+        <textarea id="cEvid"></textarea>
+        <label for="cReason">Reasoning</label>
+        <p class="hint">Explain why the fall time can be found from the drop height alone, and how that lets you turn a horizontal distance into a speed.</p>
+        <textarea id="cReason"></textarea>
+      </div>
+      <div class="xexam">
+        <h4>CROSS-EXAMINATION</h4>
+        <p id="xq1"></p>
+        <textarea id="cX1"></textarea>
+        <p id="xq2" style="margin-top:16px"></p>
+        <textarea id="cX2"></textarea>
+      </div>
+      <div style="margin-top:18px"><button class="btn" id="printBtn">Print / save as PDF</button></div>
+    </div></div>
+  </div>
+
+  <div class="footer">
+    Evidence &amp; Equations · Case #04 “The Falling Cargo” · Projectile motion, free fall and the independence of horizontal and vertical motion.<br>
+    Every team's crane is generated from its team name. Answers are accepted within 3%; the two percentage-comparison steps also allow a small absolute margin.
+  </div>
+</main>
+
+<script>
+/* ===================== PHYSICS CORE ===================== */
+/* A container leaves a moving trolley with the trolley's horizontal
+   velocity and zero vertical velocity, then falls freely.            */
+(function (root) {
+  'use strict';
+  var G = 9.81, TOL = 0.03;
+
+  function normalizeTeam(n){ return String(n||'').toUpperCase().replace(/[^A-Z0-9]/g,''); }
+  function xmur3(str){var h=1779033703^str.length;for(var i=0;i<str.length;i++){
+    h=Math.imul(h^str.charCodeAt(i),3432918353);h=(h<<13)|(h>>>19);}
+    return function(){h=Math.imul(h^(h>>>16),2246822507);h=Math.imul(h^(h>>>13),3266489909);
+      h^=h>>>16;return h>>>0;};}
+  function mulberry32(a){return function(){a|=0;a=(a+0x6D2B79F5)|0;
+    var t=Math.imul(a^(a>>>15),1|a);t=(t+Math.imul(t^(t>>>7),61|t))^t;
+    return((t^(t>>>14))>>>0)/4294967296;};}
+  function makeRng(t){var s=xmur3('E&E::CASE04::FALLINGCARGO::'+normalizeTeam(t));s();
+    return mulberry32(s());}
+  function rr(r,a,b){return a+r()*(b-a);}
+  function rstep(r,a,b,s){var n=Math.floor((b-a)/s)+1;return round(a+Math.floor(r()*n)*s,6);}
+  function rint(r,a,b){return a+Math.floor(r()*(b-a+1));}
+  function round(v,d){var f=Math.pow(10,d);return Math.round(v*f)/f;}
+
+  function generate(teamName){
+    var rng = makeRng(teamName);
+
+    var h     = rstep(rng, 8.0, 30.0, 0.1);
+    var v_max = rstep(rng, 1.8, 3.6, 0.1);
+    var p_rel = rstep(rng, 20.00, 60.00, 0.05);
+    var mass_t= rstep(rng, 4.0, 14.0, 0.1);
+
+    var fpsOpts=[24,25,30,50,60];
+    var fps = fpsOpts[rint(rng,0,fpsOpts.length-1)];
+
+    var over = rng() < 0.5;
+    var factor = over ? rr(rng,1.18,1.55) : rr(rng,0.62,0.86);
+    var v_true = v_max * factor;
+
+    var t_true = Math.sqrt(2*h/G);
+    var x_true = v_true * t_true;
+    var p_imp  = round(p_rel + x_true + rr(rng,-0.02,0.02), 2);
+
+    var frames = Math.round(t_true*fps);
+    var t_cctv = frames/fps;
+
+    var a_t=Math.sqrt(2*h/G), a_v_y=G*a_t, a_x=p_imp-p_rel, a_v=a_x/a_t;
+    var a_v_imp=Math.sqrt(a_v*a_v+a_v_y*a_v_y);
+    var a_xcheck=Math.abs(a_t-t_cctv)/t_cctv*100;
+    var a_limit=Math.abs(a_v-v_max)/v_max*100;
+
+    return {
+      team:normalizeTeam(teamName), teamDisplay:String(teamName||'').trim(),
+      given:{h:round(h,1),v_max:round(v_max,1),p_rel:round(p_rel,2),p_imp:p_imp,
+             fps:fps,frames:frames,mass_t:round(mass_t,1),g:G},
+      sealed:{frames:frames,fps:fps,t_cctv:t_cctv},
+      answers:{t:a_t,v_y:a_v_y,x:a_x,v:a_v,v_imp:a_v_imp,xcheck:a_xcheck,limitDiff:a_limit},
+      verdict: a_v > v_max ? 'OVER LIMIT' : 'WITHIN LIMIT',
+      truth:{over:over,v_true:v_true,x_true:x_true,t_true:t_true,factor:factor,
+             v_imp_if_still:G*t_true,
+             impShare:(Math.sqrt(v_true*v_true+Math.pow(G*t_true,2))-G*t_true)/(G*t_true)*100}
+    };
+  }
+  root.EE04={generate:generate,normalizeTeam:normalizeTeam,G:G,TOL:TOL};
+})(window);
+
+/* ===================== APP ===================== */
+(function(){
+'use strict';
+var $=function(s){return document.querySelector(s);};
+var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+var C=null, cineDone=false;
+function n(v,d){ return Number(v).toFixed(d); }
+
+var STAGES=[
+ {id:'t', title:'How long was the container in the air?', unit:'s', dp:3,
+  eq:'h = ½ g t²   →   t = √(2h / g)',
+  ask:'The container left the spreader with no downward push — the clamp simply opened. Its vertical motion is free fall from the release height.',
+  hint:'The horizontal motion has no effect on this. Use the drop height alone.'},
+
+ {id:'v_y', title:'How fast was it falling when it hit?', unit:'m/s', dp:2,
+  eq:'v_y = g t',
+  ask:'Find the vertical component of its velocity at the moment of impact.',
+  hint:'It started with zero vertical velocity.'},
+
+ {id:'x', title:'How far did it travel sideways?', unit:'m', dp:2,
+  eq:'x = p_impact − p_release',
+  ask:'Both positions are surveyed along the same rail axis. The encoder recorded where the trolley was at the instant of release; the survey team recorded the centre of the impact.',
+  hint:'Both figures are on the evidence cards, in metres along the rail.'},
+
+ {id:'v', title:'How fast was the trolley moving at release?', unit:'m/s', dp:2,
+  eq:'v = x / t',
+  ask:'Nothing pushed the container sideways once it was falling. Whatever horizontal speed it had, it kept — and it had the trolley\'s.',
+  hint:'Use the fall time you found in stage 1.'},
+
+ {id:'xcheck', title:'Cross-check against the camera', unit:'%', dp:2, abs:0.20,
+  eq:'difference = |t_calculated − t_camera| / t_camera × 100',
+  ask:'Your whole reconstruction rests on a fall time you calculated rather than measured. Open the sealed envelope and test it against something that was actually recorded.',
+  hint:'Frames divided by frame rate gives the camera\'s time. Then compare.', sealed:true},
+
+ {id:'v_imp', title:'How fast was it going when it struck?', unit:'m/s', dp:2,
+  eq:'v_impact = √(v² + v_y²)',
+  ask:'Combine the horizontal and vertical components into the resultant impact speed. Note what it is close to.',
+  hint:'These are perpendicular components. Use Pythagoras.'},
+
+ {id:'limitDiff', title:'How far above or below the posted limit?', unit:'%', dp:2, abs:0.30,
+  eq:'difference = |v − v_max| / v_max × 100',
+  ask:'The yard safety notice states the maximum permitted trolley speed. How far above or below it was this crane?',
+  hint:'The posted limit is on the safety notice card.'}
+];
+
+function buildEvidence(){
+  var g=C.given;
+  var cards=[
+    {h:'CRANE SPEC PLATE', rows:[
+      ['Release height above deck', g.h.toFixed(1)+' m'],
+      ['Rail axis', 'Bay 7, north–south'],
+      ['Spreader type', 'Container spreader · twist-lock'],
+      ['g used on site', g.g+' m/s²']]},
+    {h:'TROLLEY ENCODER LOG', rows:[
+      ['Position at clamp release', g.p_rel.toFixed(2)+' m'],
+      ['Direction of travel', 'Increasing'],
+      ['Sample rate', '100 Hz'],
+      ['Fault code at release', 'CLAMP-OPEN']]},
+    {h:'IMPACT SURVEY', rows:[
+      ['Impact centre on rail axis', g.p_imp.toFixed(2)+' m'],
+      ['Container gross mass', g.mass_t.toFixed(1)+' t'],
+      ['Deck condition', 'Dry, level'],
+      ['Wind at 02:14', 'Calm, under 2 knots']]},
+    {h:'YARD SAFETY NOTICE', rows:[
+      ['Maximum trolley speed', g.v_max.toFixed(1)+' m/s'],
+      ['Applies', 'All laden moves'],
+      ['Posted at', 'Both gantry legs'],
+      ['Last reviewed', 'Current']]}
+  ];
+  $('#eviGrid').innerHTML = cards.map(function(c){
+    return '<div class="evi"><h4>'+c.h+'</h4><dl>'+c.rows.map(function(r){
+      return '<div class="row"><dt>'+r[0]+'</dt><dd>'+r[1]+'</dd></div>';}).join('')+'</dl></div>';
+  }).join('');
+}
+
+var stageState={};
+function buildStages(){
+  $('#stages').innerHTML = STAGES.map(function(s,i){
+    var sealedHtml = s.sealed
+      ? '<div class="sealed" id="sealedBox"><h4>SEALED ENVELOPE — YARD CCTV</h4>'
+        +'<div class="val" id="sealedVal">•••••</div>'
+        +'<p>Fixed camera on the quay mast, looking down the rail. Frames counted from the clamp-open fault code to first contact with the deck. The camera knows nothing about your drop height.</p>'
+        +'<p style="margin-top:10px"><button class="btn ghost" id="openSealed">Break the seal</button></p></div>'
+      : '';
+    return '<div class="stage locked" id="st'+i+'">'
+      +'<div class="stHead"><div class="stNum">'+(i+1)+'</div><div class="stTitle">'+s.title+'</div></div>'
+      +'<div class="stBody"><p class="ask">'+s.ask+'</p><div class="eq">'+s.eq+'</div>'+sealedHtml
+      +'<div class="ansRow"><input type="text" inputmode="decimal" id="in'+i+'" placeholder="your answer">'
+      +'<span class="unit">'+s.unit+'</span><button class="btn" id="ck'+i+'">Check</button></div>'
+      +'<div class="fb" id="fb'+i+'"></div><div class="tries" id="tr'+i+'"></div></div></div>';
+  }).join('');
+  STAGES.forEach(function(s,i){
+    stageState[i]={tries:0,done:false};
+    $('#ck'+i).addEventListener('click',function(){check(i);});
+    $('#in'+i).addEventListener('keydown',function(e){ if(e.key==='Enter') check(i); });
+  });
+  $('#openSealed').addEventListener('click',function(){
+    $('#sealedVal').textContent = C.given.frames+' frames at '+C.given.fps+' fps';
+    this.parentNode.remove();
+  });
+  openStage(0);
+}
+
+function openStage(i){
+  var el=$('#st'+i); if(!el) return;
+  el.classList.remove('locked'); el.classList.add('open');
+  var inp=$('#in'+i); if(inp) inp.focus({preventScroll:true});
+  el.scrollIntoView({behavior:reduced?'auto':'smooth',block:'center'});
+}
+
+function check(i){
+  var s=STAGES[i], st=stageState[i];
+  if(st.done) return;
+  var v=parseFloat($('#in'+i).value.trim().replace(/,/g,''));
+  var fb=$('#fb'+i); fb.className='fb show';
+  if(!isFinite(v)){ fb.classList.add('bad'); fb.textContent='Enter a number.'; return; }
+  if(s.sealed && $('#openSealed')){
+    fb.classList.add('bad');
+    fb.textContent='Break the seal first. You cannot compare against a recording you have not read.';
+    return;
+  }
+  var target=C.answers[s.id];
+  /* percentage-difference answers can sit near zero, where a purely relative
+     tolerance is impossibly tight; those stages carry an absolute allowance. */
+  var band=Math.max(0.03*Math.abs(target), s.abs||0);
+  st.tries++;
+  if(Math.abs(v-target)<=band){
+    st.done=true;
+    $('#st'+i).classList.remove('open'); $('#st'+i).classList.add('done');
+    fb.classList.add('good');
+    fb.textContent='Accepted — '+n(target,s.dp)+' '+s.unit+(st.tries===1?'':' (after '+st.tries+' attempts)');
+    $('#ck'+i).disabled=true; $('#in'+i).disabled=true;
+    afterStage(i);
+  }else{
+    fb.classList.add('bad');
+    fb.textContent='Not accepted. Your value is too '+(v>target?'high':'low')+'.';
+    $('#tr'+i).textContent = st.tries>=2 ? 'Hint: '+s.hint : '';
+  }
+}
+
+function afterStage(i){
+  if(STAGES[i].id==='xcheck'){
+    var box=document.createElement('div');
+    box.innerHTML='<p class="ask" style="margin-top:16px">The calculated and recorded fall times agree to '
+      +C.answers.xcheck.toFixed(2)+'%. What does that let you conclude?</p><div class="choices">'
+      +'<button class="choice" data-c="0">The trolley was over the posted speed limit.</button>'
+      +'<button class="choice" data-c="1">The free-fall model fits what actually happened, so the fall time can be trusted to convert the horizontal throw into a speed.</button>'
+      +'<button class="choice" data-c="2">The container must have been released from rest.</button>'
+      +'<button class="choice" data-c="3">Air resistance was significant during the fall.</button>'
+      +'</div><div class="fb" id="fbJ"></div>';
+    $('#st'+i+' .stBody').appendChild(box);
+    box.querySelectorAll('.choice').forEach(function(b){
+      b.addEventListener('click',function(){
+        var f=$('#fbJ'); f.className='fb show';
+        if(b.dataset.c==='1'){
+          f.classList.add('good');
+          f.textContent='Correct. The recorded time agrees with the free-fall prediction, which supports the model for this reconstruction — a downward push would have shortened the fall, and significant air resistance would have lengthened it, so either would have shown up here as a mismatch. You can now use this validated fall time to find the horizontal release speed. It says nothing yet about that speed.';
+          box.querySelectorAll('.choice').forEach(function(x){x.disabled=true;});
+          setTimeout(function(){ openStage(i+1); },500);
+        }else{
+          f.classList.add('bad');
+          f.textContent='No. This stage tests whether your timing is sound, not what the trolley was doing.';
+        }
+      });
+    });
+    return;
+  }
+  if(STAGES[i].id==='limitDiff'){
+    var over=C.answers.v>C.given.v_max;
+    var box2=document.createElement('div');
+    box2.innerHTML='<p class="ask" style="margin-top:16px">That is the size of the gap. Now the direction: '
+      +'was the trolley above or below the posted maximum of '+n(C.given.v_max,1)+' m/s?</p>'
+      +'<div class="choices">'
+      +'<button class="choice" data-d="above">ABOVE the posted limit</button>'
+      +'<button class="choice" data-d="below">BELOW the posted limit</button>'
+      +'</div><div class="fb" id="fbD"></div>';
+    $('#st'+i+' .stBody').appendChild(box2);
+    box2.querySelectorAll('.choice').forEach(function(b){
+      b.addEventListener('click',function(){
+        var fd=$('#fbD'); fd.className='fb show';
+        if((b.dataset.d==='above')===over){
+          fd.classList.add('good');
+          fd.textContent='Correct — '+n(C.answers.v,2)+' m/s against a posted maximum of '
+            +n(C.given.v_max,1)+' m/s.';
+          box2.querySelectorAll('.choice').forEach(function(x){x.disabled=true;});
+          setTimeout(showVerdict,500);
+        }else{
+          fd.classList.add('bad');
+          fd.textContent='No. Put your stage 4 answer next to the posted limit and compare them directly.';
+        }
+      });
+    });
+    return;
+  }
+  if(i+1<STAGES.length) openStage(i+1); else showVerdict();
+}
+
+var chosen=null;
+function showVerdict(){
+  $('#verdictWrap').classList.remove('hidden');
+  $('#verdictAsk').innerHTML='You reconstructed a trolley speed of <strong>'+n(C.answers.v,2)
+    +' m/s</strong>. The yard safety notice posts a maximum of <strong>'+n(C.given.v_max,1)
+    +' m/s</strong> — a difference of <strong>'+n(C.answers.limitDiff,1)+'%</strong>.';
+  document.querySelectorAll('.vcard').forEach(function(b){
+    b.addEventListener('click',function(){
+      document.querySelectorAll('.vcard').forEach(function(x){x.classList.remove('sel');});
+      b.classList.add('sel'); chosen=b.dataset.v; $('#verdictBtn').disabled=false;
+    });
+  });
+  $('#verdictBtn').addEventListener('click',fileVerdict);
+  $('#verdictWrap').scrollIntoView({behavior:reduced?'auto':'smooth',block:'center'});
+}
+
+function fileVerdict(){
+  var f=$('#verdictFb'); f.className='fb show';
+  if(chosen!==C.verdict){
+    f.classList.add('bad');
+    f.textContent='Compare your own two numbers again: '+n(C.answers.v,2)
+      +' m/s against a posted maximum of '+n(C.given.v_max,1)+' m/s.';
+    return;
+  }
+  f.classList.add('good'); f.textContent='Verdict filed: '+C.verdict+'.';
+  $('#verdictBtn').disabled=true;
+  document.querySelectorAll('.vcard').forEach(function(x){x.disabled=true;});
+  buildReplay(); buildCER();
+}
+
+/* ---------- reconstruction ---------- */
+function buildReplay(){
+  $('#replayWrap').classList.remove('hidden');
+  renderReplay();
+  $('#replayAgain').addEventListener('click',renderReplay);
+  $('#replayWrap').scrollIntoView({behavior:reduced?'auto':'smooth',block:'start'});
+}
+
+function renderReplay(){
+  var W=860,H=430, x0=140, y0=48, deck=356;
+  var pxH=deck-y0;                                   /* pixels for the drop */
+  var maxX=Math.max(C.answers.x,1);
+  var pxX=Math.min(560, maxX*46);                    /* pixels for the throw */
+  var pts=[];
+  for(var k=0;k<=40;k++){
+    var f=k/40;
+    pts.push((x0+pxX*f).toFixed(1)+','+(y0+pxH*f*f).toFixed(1));
+  }
+  var dur=(C.answers.t*1.6).toFixed(2);
+
+  $('#replayBox').innerHTML =
+   '<svg viewBox="0 0 '+W+' '+H+'" xmlns="http://www.w3.org/2000/svg">'
+   +'<rect width="'+W+'" height="'+H+'" fill="#04080c"/>'
+   +'<rect x="0" y="'+deck+'" width="'+W+'" height="'+(H-deck)+'" fill="#111c26"/>'
+   /* rail + trolley */
+   +'<rect x="90" y="'+(y0-26)+'" width="640" height="5" fill="#33475a"/>'
+   +'<rect x="'+(x0-34)+'" y="'+(y0-24)+'" width="68" height="22" rx="3" fill="#2f4150"/>'
+   /* stationary-release reference */
+   +'<line x1="'+x0+'" y1="'+y0+'" x2="'+x0+'" y2="'+deck+'" stroke="#5f7387" '
+     +'stroke-width="1.6" stroke-dasharray="6 6" opacity=".8"/>'
+   +'<text x="'+(x0-8)+'" y="'+(deck+26)+'" fill="#8fa3b3" text-anchor="end" '
+     +'font-family="Helvetica Neue,Arial" font-size="12">if the trolley were still</text>'
+   /* actual trajectory */
+   +'<polyline points="'+pts.join(' ')+'" fill="none" stroke="#e8a33d" stroke-width="2" '
+     +'stroke-dasharray="4 5" opacity=".65"/>'
+   /* falling container */
+   +'<g class="rp-box"'+(reduced?' transform="translate('+(x0+pxX)+','+deck+')"':'')+'>'
+     +'<rect x="-26" y="-13" width="52" height="26" rx="2" fill="#9a6337" '
+     +'stroke="#c08a4e" stroke-width="1.3"/>'
+     +(reduced?'':'<animateMotion dur="'+dur+'s" begin="0s" fill="freeze" '
+       +'calcMode="spline" keyTimes="0;1" keySplines="0.5 0 0.85 0.55" '
+       +'path="M'+x0+','+y0+' Q'+(x0+pxX/2)+','+y0+' '+(x0+pxX)+','+deck+'"/>')
+     +'</g>'
+   /* impact marker */
+   +'<line x1="'+(x0+pxX)+'" y1="'+(deck-10)+'" x2="'+(x0+pxX)+'" y2="'+(deck+10)+'" '
+     +'stroke="#d1604f" stroke-width="2.4"/>'
+   +'<text x="'+(x0+pxX)+'" y="'+(deck+30)+'" fill="#d1604f" text-anchor="middle" '
+     +'font-family="Helvetica Neue,Arial" font-size="12">impact</text>'
+   /* throw dimension */
+   +'<line x1="'+x0+'" y1="'+(deck+52)+'" x2="'+(x0+pxX)+'" y2="'+(deck+52)+'" '
+     +'stroke="#e8a33d" stroke-width="1.4"/>'
+   +'<text x="'+(x0+pxX/2)+'" y="'+(deck+44)+'" fill="#e8a33d" text-anchor="middle" '
+     +'font-family="Helvetica Neue,Arial" font-size="13" font-weight="700">'+n(C.answers.x,2)+' m</text>'
+   /* readouts */
+   +'<g font-family="Helvetica Neue,Arial" font-size="12" fill="#9aa3ad">'
+   +'<text x="'+(W-40)+'" y="96" text-anchor="end">fall time</text>'
+   +'<text x="'+(W-40)+'" y="120" text-anchor="end" fill="#e8a33d" font-size="20" font-weight="700">'+n(C.answers.t,2)+' s</text>'
+   +'<text x="'+(W-40)+'" y="164" text-anchor="end">trolley speed at release</text>'
+   +'<text x="'+(W-40)+'" y="188" text-anchor="end" fill="#e9e7e2" font-size="20" font-weight="700">'+n(C.answers.v,2)+' m/s</text>'
+   +'<text x="'+(W-40)+'" y="232" text-anchor="end">posted maximum</text>'
+   +'<text x="'+(W-40)+'" y="256" text-anchor="end" fill="#e9e7e2" font-size="20" font-weight="700">'+n(C.given.v_max,1)+' m/s</text>'
+   +'</g>'
+   +'</svg>'
+   +'<div class="rcap">'
+   + 'The container kept the trolley\'s horizontal speed of '+n(C.answers.v,2)
+   + ' m/s all the way down — nothing was pushing it sideways, and nothing was slowing it. '
+   + 'Meanwhile it fell at '+n(C.answers.v_y,1)+' m/s by the time it struck. '
+   + 'The sideways motion carried it '+n(C.answers.x,2)+' m from the release point, but it added only '
+   + n(C.truth.impShare,1)+'% to the speed of the impact itself.'
+   +'</div>';
+}
+
+/* ---------- CER ---------- */
+function buildCER(){
+  $('#cerWrap').classList.remove('hidden');
+  var over = C.verdict==='OVER LIMIT';
+  $('#xq1').textContent = over
+    ? 'Defence counsel: “That container had a gross mass of '+C.given.mass_t.toFixed(1)
+      +' tonnes. Your calculation treats it as though mass were irrelevant to how long it takes to fall. Nobody believes a loaded box and an empty one drop the same way.” Answer this.'
+    : 'Defence counsel: “Your fall time is a textbook number, not a measurement. Air resistance, wind, a '
+      +C.given.mass_t.toFixed(1)+'-tonne box tumbling — you cannot calculate a real accident like a homework problem.” Answer using your stage 5 cross-check.';
+  $('#xq2').textContent = over
+    ? 'Defence counsel: “The impact was catastrophic. That damage proves the trolley was travelling at reckless speed.” Use your stage 6 result to answer, and be precise about what actually caused the impact speed.'
+    : 'Defence counsel: “The container landed metres away from where it was released. Objects do not drift sideways on their own. Something must have thrown it, which means the crane was being handled violently.” Answer this.';
+  $('#printBtn').addEventListener('click',function(){ buildReport(); window.print(); });
+  window.addEventListener('beforeprint', buildReport);
+}
+
+/* ---------- printable report ---------- */
+function esc(t){ return String(t||'').replace(/[&<>]/g,function(c){
+  return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c]; }); }
+
+function buildReport(){
+  if(!C) return;
+  var g=C.given, a=C.answers;
+  var rows=STAGES.map(function(s,i){
+    var st=stageState[i]||{tries:0,done:false};
+    return '<tr><td>'+(i+1)+' &middot; '+s.title+'</td>'
+      +'<td class="num ans">'+(st.done?n(a[s.id],s.dp)+' '+s.unit:'\u2014')+'</td>'
+      +'<td class="num">'+(st.done?st.tries:'\u2014')+'</td></tr>';
+  }).join('');
+
+  var qa=[
+    ['Claim', $('#cClaim')], ['Evidence', $('#cEvid')], ['Reasoning', $('#cReason')]
+  ].map(function(p){
+    return '<div class="qa"><div class="q">'+p[0]+'</div><div class="a">'
+      +esc(p[1]?p[1].value:'')+'</div></div>';
+  }).join('');
+
+  var xq=[[$('#xq1'),$('#cX1')],[$('#xq2'),$('#cX2')]].map(function(p){
+    return '<div class="qa"><div class="q">'+esc(p[0]?p[0].textContent:'')+'</div>'
+      +'<div class="a">'+esc(p[1]?p[1].value:'')+'</div></div>';
+  }).join('');
+
+  var filed = chosen && chosen===C.verdict;
+
+  $('#printReport').innerHTML =
+    '<div class="pcase">EVIDENCE &amp; EQUATIONS &nbsp;&middot;&nbsp; CASE #04</div>'
+   +'<h1>The Falling Cargo</h1>'
+   +'<p class="pmeta"><strong>Team '+esc(C.team)+'</strong> &nbsp;&middot;&nbsp; '
+     +'Investigator report &nbsp;&middot;&nbsp; generated '+new Date().toLocaleDateString()+'</p>'
+
+   +'<h2>EVIDENCE ISSUED TO THIS TEAM</h2>'
+   +'<table><tr><th>Item</th><th>Value</th><th>Item</th><th>Value</th></tr>'
+   +'<tr><td>Release height</td><td class="num">'+g.h.toFixed(1)+' m</td>'
+     +'<td>Posted max speed</td><td class="num">'+g.v_max.toFixed(1)+' m/s</td></tr>'
+   +'<tr><td>Encoder at release</td><td class="num">'+g.p_rel.toFixed(2)+' m</td>'
+     +'<td>Impact centre</td><td class="num">'+g.p_imp.toFixed(2)+' m</td></tr>'
+   +'<tr><td>Container mass</td><td class="num">'+g.mass_t.toFixed(1)+' t</td>'
+     +'<td>Sealed CCTV</td><td class="num">'+g.frames+' frames @ '+g.fps+' fps</td></tr>'
+   +'</table>'
+
+   +'<h2>CALCULATIONS FILED</h2>'
+   +'<table><tr><th>Stage</th><th style="width:26mm">Accepted answer</th>'
+     +'<th style="width:20mm">Attempts</th></tr>'+rows+'</table>'
+
+   +'<h2>VERDICT</h2>'
+   +'<p><span class="vd">'+(filed?esc(C.verdict):'NOT FILED')+'</span></p>'
+   +'<p style="font:9.5pt/1.5 \'Helvetica Neue\',Arial,sans-serif;color:#555">'
+     +'Reconstructed trolley speed '+n(a.v,2)+' m/s against a posted maximum of '
+     +g.v_max.toFixed(1)+' m/s &mdash; a difference of '+n(a.limitDiff,2)+'%.</p>'
+
+   +'<h2>CLAIM, EVIDENCE, REASONING</h2>'+qa
+   +'<h2>CROSS-EXAMINATION</h2>'+xq
+   +'<div class="foot">Evidence &amp; Equations &middot; Case #04 &ldquo;The Falling Cargo&rdquo; &middot; '
+     +'Every team&rsquo;s crane is generated from its team name. '
+     +'Answers accepted within 3%; percentage-comparison stages allow a small absolute margin.</div>';
+}
+
+/* ---------- cinematic ---------- */
+function playCine(done){
+  var cine=$('#cine'); cine.classList.remove('hidden');
+  var finished=false, timers=[], raf=0, audioCtx=null;
+  function later(fn,ms){timers.push(setTimeout(fn,ms));}
+  function end(){if(finished)return;finished=true;timers.forEach(clearTimeout);if(raf)cancelAnimationFrame(raf);cine.classList.add('hidden');done();}
+  $('#cineSkip').onclick=end;
+  if(reduced){end();return;}
+
+  function ac(){if(audioCtx)return audioCtx;try{audioCtx=new (window.AudioContext||window.webkitAudioContext)();}catch(e){}return audioCtx;}
+  function tone(freq,dur,type,gain,delay){var x=ac();if(!x)return;var t=x.currentTime+(delay||0),o=x.createOscillator(),g=x.createGain();o.type=type||'sine';o.frequency.value=freq;g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(gain||.01,t+.03);g.gain.exponentialRampToValueAtTime(.0001,t+dur);o.connect(g);g.connect(x.destination);o.start(t);o.stop(t+dur+.05);}
+  function noise(dur,gain,cut){var x=ac();if(!x)return;var len=Math.floor(x.sampleRate*dur),buf=x.createBuffer(1,len,x.sampleRate),d=buf.getChannelData(0);for(var i=0;i<len;i++)d[i]=Math.random()*2-1;var q=x.createBufferSource(),f=x.createBiquadFilter(),g=x.createGain(),t=x.currentTime;f.type='lowpass';f.frequency.value=cut||650;g.gain.setValueAtTime(.0001,t);g.gain.linearRampToValueAtTime(gain||.01,t+.12);g.gain.exponentialRampToValueAtTime(.0001,t+dur);q.buffer=buf;q.connect(f);f.connect(g);g.connect(x.destination);q.start(t);q.stop(t+dur+.04);}
+
+  var st=document.createElement('style');
+  st.textContent=
+   '.k-cam{transform-box:fill-box;transform-origin:58% 46%;animation:kPush 10.8s cubic-bezier(.18,.68,.2,1) forwards}'
+  +'@keyframes kPush{0%{transform:scale(1.01) translate(0,0)}45%{transform:scale(1.055) translate(-.7%,.15%)}68%{transform:scale(1.078) translate(-1.3%,.35%)}100%{transform:scale(1.09) translate(-1.7%,.45%)}}'
+  +'.k-trolleyX{animation:kRollA 2.6s linear 1.25s forwards,kRollB 2.4s linear 3.85s forwards}'
+  +'@keyframes kRollA{from{transform:translateX(0)}to{transform:translateX(96px)}}@keyframes kRollB{from{transform:translateX(96px)}to{transform:translateX(184px)}}'
+  +'.k-boxX{animation:kRollA 2.6s linear 1.25s forwards,kRollB 2.4s linear 3.85s forwards}'
+  +'.k-boxY{transform-box:fill-box;transform-origin:50% 8%;animation:kFallY 2.4s linear 3.85s forwards}'
+  +'@keyframes kFallY{0%{transform:translateY(0) rotate(0)}10%{transform:translateY(2.2px) rotate(.08deg)}20%{transform:translateY(8.9px) rotate(.18deg)}30%{transform:translateY(20px) rotate(.3deg)}40%{transform:translateY(35.5px) rotate(.45deg)}50%{transform:translateY(55.5px) rotate(.62deg)}60%{transform:translateY(79.9px) rotate(.82deg)}70%{transform:translateY(108.8px) rotate(1.02deg)}80%{transform:translateY(142.1px) rotate(1.22deg)}90%{transform:translateY(179.8px) rotate(1.45deg)}100%{transform:translateY(222px) rotate(1.7deg)}}'
+  +'.k-beacon{animation:kBeacon .72s ease-in-out 1.8s 4}@keyframes kBeacon{0%,100%{opacity:.12}50%{opacity:1}}'
+  +'.k-lockL{animation:kLockL .28s ease-out 3.80s forwards}.k-lockR{animation:kLockR .28s ease-out 3.80s forwards}'
+  +'@keyframes kLockL{to{transform:translateX(-7px) rotate(-24deg);opacity:.42}}@keyframes kLockR{to{transform:translateX(7px) rotate(24deg);opacity:.42}}'
+  +'.k-lockL,.k-lockR{transform-box:fill-box;transform-origin:50% 0}.k-spreader{animation:kSpread .36s ease-out 3.80s forwards}@keyframes kSpread{to{opacity:.48}}'
+  +'.k-flash{animation:kFlash .42s ease-out 6.25s forwards}@keyframes kFlash{0%{opacity:0}10%{opacity:.20}100%{opacity:0}}'
+  +'.k-shake{animation:kShake .46s ease-out 6.25s forwards}@keyframes kShake{0%{transform:translate(0,0)}14%{transform:translate(-4px,3px)}30%{transform:translate(3px,-2px)}50%{transform:translate(-2px,1px)}100%{transform:translate(0,0)}}'
+  +'.k-burst{transform-box:fill-box;transform-origin:center;animation:kBurst 1.9s ease-out 6.25s forwards}@keyframes kBurst{0%{opacity:0;transform:scale(.25)}14%{opacity:.82}100%{opacity:0;transform:scale(1.72)}}'
+  +'.k-dust{transform-box:fill-box;transform-origin:center;animation:kDust 2.8s ease-out 6.28s forwards}@keyframes kDust{0%{opacity:0;transform:scale(.3) translateY(0)}18%{opacity:.78}100%{opacity:0;transform:scale(1.6) translateY(-8px)}}'
+  +'.k-hud{animation:kIn .5s ease-out 7.25s forwards}@keyframes kIn{to{opacity:1}}'
+  +'.k-lamp{animation:kFlick 7s ease-in-out infinite}@keyframes kFlick{0%,100%{opacity:1}48%{opacity:.90}51%{opacity:1}76%{opacity:.95}79%{opacity:1}}';
+  document.head.appendChild(st);
+  $('#cineMeta').classList.add('on');
+
+  noise(10.8,.006,430); tone(50,5.8,'sine',.006,.1); tone(79,5.2,'triangle',.004,.25);
+  later(function(){tone(390,.09,'square',.009,0);tone(230,.14,'triangle',.007,.04);},7420);
+  later(function(){noise(.85,.035,1500);tone(68,.62,'sine',.018,0);tone(116,.26,'triangle',.012,.02);},8600);
+
+  var el=document.getElementById('encVal'),target=C.given.p_rel,t0=null;
+  function tick(ts){if(finished)return;if(!t0)t0=ts;var p=Math.min((ts-t0)/1050,1),e=1-Math.pow(1-p,3);el.textContent=(target*e+(1-p)*(.18*(Math.random()-.5))).toFixed(2);if(p<1)raf=requestAnimationFrame(tick);else{el.textContent=target.toFixed(2);var g=document.getElementById('encTag');if(g){g.style.transition='opacity .3s';g.style.opacity='1';}tone(960,.10,'sine',.017,0);tone(1320,.08,'sine',.008,.08);}}
+  later(function(){raf=requestAnimationFrame(tick);},9200);
+  later(function(){var c=$('#cineCap');c.style.transition='opacity .55s';c.style.opacity='1';},10600);
+  later(end,10400);
+}
+
+/* ---------- start ---------- */
+$('#startBtn').addEventListener('click',start);
+$('#teamIn').addEventListener('keydown',function(e){ if(e.key==='Enter') start(); });
+
+function start(){
+  var name=$('#teamIn').value.trim();
+  if(EE04.normalizeTeam(name).length<3){
+    $('#teamIn').focus(); $('#teamIn').style.borderColor='var(--no)'; return;
+  }
+  C=EE04.generate(name);
+  $('#title').classList.add('hidden');
+  function reveal(){
+    cineDone=true;
+    $('#case').classList.remove('hidden');
+    $('#teamTag').textContent='TEAM '+C.team;
+    buildEvidence(); buildStages(); window.scrollTo(0,0);
+  }
+  if(cineDone) reveal(); else playCine(reveal);
+}
+})();
+</script>
+</body>
+</html>
